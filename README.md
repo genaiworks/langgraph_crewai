@@ -2,6 +2,8 @@
 
 Source https://www.youtube.com/watch?v=5eYg1OcHm5k
 
+https://github.com/langchain-ai/langgraph/blob/main/examples/rag/langgraph_rag_agent_llama3_local.ipynb
+
 Search Gmail by Date
 before:YYYY/MM/DD 
 after:YYYY/MM/DD
