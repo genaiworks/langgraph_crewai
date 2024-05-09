@@ -1,0 +1,161 @@
+Inputs:
+    Structured DAta
+    Text
+    Voice
+    3D Signals
+    Images
+
+Output
+    Information Extraction
+    Instruction Following
+    Object Recognition
+    Image Captioning
+    Q&A
+    Sentiment Analysis
+
+AI ChatBot to chat with
+    PDF
+    Powerpoint
+    Spreadsheets
+
+2 Ways to train LLM:
+    1.  Fine Tuning:
+        1. Pretrain model using Wikipedia, Books, Articles, Internet etc.
+        2. FineTune:
+            DataSet Chat
+            DataSet Instruct 
+            DataSet Large Context
+            Dataset Summarization
+            Dataset Translation 
+        Cons:
+            Need to prepare training data properly
+            Lots of fine tuning parameters
+
+    2. RAG/Retrival Augmented Generation:
+        Do not change the model but put knowledge into the prompt.
+        Get relevant knowledge from documents of private database.
+        Insert that knowledge as prompt so that LLM has additional context.
+
+        Steps: Extract data from raw data source and convert into vector database.
+            1. Raw Data Source
+            2. Infomation Extraction
+            3. Chunking
+            4. Embedding
+            Store embeddings into Vector Database
+        User Query:
+            Query --> Embeddings--> Query relevant data from Vector database.
+        LLM:
+            User query response from Vector database is fed to LLM and response is returned.
+
+    Challenges of RAG:
+        1. Realworld data is messy with 
+            Images
+            Diagrams
+            Tables
+
+        Different data require different retrival methods:
+            SpreadSheet and SQL Data: 
+                vector search may not be right
+                
+            Complex Questions:
+                How was sales trend from 2022 to 2024?
+    
+
+
+
+RAG Agent that is Reliable and Accurate:
+
+This is a must have mapping if you have pain points in any one of the following listed areas:
+1. Context Missing in the Knowledge Base
+2. Context Missing in the Initial Retrieval Pass
+3. Context Missing After Reranking
+4. Context Not Extracted
+5. Output is in Wrong Format
+6. Output has Incorrect Level of Specificity
+7. Output is Incomplete
+8. Ingestion Pipeline Can't Scale to Larger Data Volumes
+9. Inability to QA Structured Data
+10. Document (PDF) Parsing
+11. Rate Limit Errors
+12. LLM Security (prompt injection)
+
+Reliable and Accurate RAG:
+
+1. Better Data Parser
+    Huge number of parsers on Llama Hub, but many of these document parser not accurate e.g. PyPDF extract numbers and data incorrectly from the PDF financial report tables.
+BETTER PARSER ARE
+
+1. LlamaParse for LOCAL files
+    Here we can send parser prompt to tell what document type is and how to extract information from the document.
+    Parse Prompt:
+        Try to reconstruct dialog from comic book.
+        Output any math equation in LATEX markdown.
+    Parsing PDFs(text, image and tables) for RAG based applications using LlamaParse (LlamaIndex)
+    LlamaParse unlock RAG over complex PDFs with embedded tables and charts.
+    As the parsed text contains everything (text, table, image, etc..) in markdown form, we will be using the MarkdownElementNodeParser which will store the markdown information in nodes.
+    
+    from llama_index.core.node_parser import MarkdownElementNodeParser
+    node_parser = MarkdownElementNodeParser(llm=OpenAI(model="gpt-3.5-turbo"), num_workers=4)
+    nodes = node_parser.get_nodes_from_documents(documents=[documents[0]])
+    base_nodes, objects = node_parser.get_nodes_and_objects(nodes)
+    https://colab.research.google.com/drive/1aUPywCH92XLNpdjkmXz3ff8H-QnT2JHZ?usp=sharing
+
+2. FireCrawl for WEBSITE data
+    Convert website to markdown format text.  This will allow LLM to receive clean data.
+
+Than optimize RAG to markdown format.
+
+Chunk Size:
+    LLM has limited context window.  
+    Big chunk size:
+        Lost in the middle problem.  LLM pay attention to beginning and end of the chunk.
+    Very small chunk
+        LLM has limited context.
+    Find optimal chunk size for optimal retieval.
+
+ReRank:
+    Optimize relevancy of document.
+    top_k=10 returns chunk of mix level of relevance.  Most relevant document is spread across the relevant chunk.  If we send all 10 documents to LLM, it will require lot more tokens and lot of noise.
+    ReRanker LLM: We send top_k to another LLM to get relevancy of the document top_n=3
+    Use these top 3 document to generate output.
+
+Hybrid Search:
+    Instread of just doing 
+            Vector Search
+    We will do Vector Search and Keyword Search.
+
+Agentic RAG:
+    We can utilize agent's dynamic and reasoning ability to find what is optimal in a pipeline.
+    Self check and chain of thoughts to improve.
+
+Step Back Prompting:
+    Instead of asking the prompt the user asked, we ask system to modify question to more retrival friendly.
+
+    Allow agent to modify the question a little bit when we are doing the retrival.
+
+Metadata Filtering and Routing:
+    Get agent to generate metadata first.
+    Use that metadata for searching relevant data.
+    Instead of vector search of all possible DB.  Get agent to generate metadata first, then filter down list of data it does the vector search against.
+
+Corrective RAG Agent:
+    Pipeline for returning high quality results.
+    Retrieve Document -->Evaluation--> If document evaulated correct --->Knowledge Refinement 
+    Retrieve Document -->Evaluation--> Ambiguous/Incorrect --> Go to internet-->Knowledge Searching
+
+Question-->Retrieve Document --> Grade Documents:
+    Yes: Generate Answer
+    No:  WEb Search/Tavily WebSerch engine 
+
+Use LangGraph to search and get relevant document evaluate and score again till relevant doc found...
+
+
+
+
+
+
+
+Ref:
+https://www.youtube.com/watch?v=u5Vcrwpzoz8
+https://rahuld3eora.medium.com/from-basic-to-advanced-rag-every-step-of-the-way-dee3a3a1aae9
+https://howaibuildthis.substack.com/p/rag-in-action-beyond-basics-to-advanced
